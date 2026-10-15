@@ -1070,6 +1070,15 @@ button, input, select, textarea {
 .ask .btn{transition:transform .25s var(--ease-spring),box-shadow .25s ease}
 .ask .btn:hover:not(:disabled){transform:translateY(-3px) scale(1.03)}
 }
+/* account chip */
+#acct-btn{width:100%;justify-content:flex-start;gap:.65rem;padding:.42rem .65rem .42rem .45rem;border-radius:14px;background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--ink-primary);font-size:.9rem}
+#acct-btn .av{width:30px;height:30px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:#fff;background:linear-gradient(135deg,#2dd4bf,#6366f1);box-shadow:0 4px 12px -3px rgba(99,102,241,.6)}
+#acct-btn .al{flex:1;text-align:left;font-weight:600}
+#acct-btn svg{width:18px;height:18px;flex-shrink:0;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.65}
+#acct-btn:not(:has(.av)){padding-left:.9rem}
+#acct-btn:has(.av):hover:not(:disabled){background:var(--err-bg);border-color:var(--err-border)}
+#acct-btn:has(.av):hover svg{color:var(--err);opacity:1}
+@media(prefers-reduced-motion:no-preference){#acct-btn svg{transition:transform .3s var(--ease-spring),opacity .2s}#acct-btn:hover svg{transform:translateX(3px)}#acct-btn .av{transition:transform .3s var(--ease-spring)}#acct-btn:hover .av{transform:scale(1.08)}}
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb {
@@ -2086,7 +2095,7 @@ async function cloudAuth(){const u=window.CS&&window.CS.user;cuser=u||null;
  if(!u){sync="off";nav();if(view==="settings"||view==="home")go(view);return}
  try{const raw=await window.CS.load(u);sync="on";const c=raw?clean(JSON.parse(raw)):null;if(c){S=merge(S,c)}save()}catch(e){sync="error"}
  nav();if(["home","path","progress","notebook","review","settings"].includes(view))go(view)}
-const acctLabel=()=>cuser?T("Sign out","Выйти")+" ("+esc(cuser.email||cuser.displayName||"")+")":T("Sign in with Google","Войти через Google");
+const acctLabel=()=>cuser?`<span class="av" aria-hidden="true">${esc(((cuser.displayName||cuser.email||"?").trim()[0]||"?").toUpperCase())}</span><span class="al">${T("Sign out","Выйти")}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>`:`<span class="al">${T("Sign in with Google","Войти через Google")}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>`;
 const syncText=()=>cuser?T(`Signed in as ${esc(cuser.email)}. Your progress is also stored in Firebase (Google Cloud) under your account, so it follows you across devices. Only you can read it. A local copy stays in this browser; download a backup anyway.`+(sync==="error"?" The last cloud save failed; your local copy is safe.":""),`Вы вошли как ${esc(cuser.email)}. Прогресс также хранится в Firebase (Google Cloud) в вашем аккаунте и доступен на разных устройствах. Читать его можете только вы. Локальная копия остаётся в браузере; всё равно скачивайте резервную копию.`+(sync==="error"?" Последнее облачное сохранение не удалось; локальная копия цела.":"")):T("Not signed in. Progress is stored only in this browser (localStorage), does not sync between devices and can be lost if you clear browser data. Sign in with Google to keep it in the cloud.","Вы не вошли. Прогресс хранится только в этом браузере (localStorage), не синхронизируется между устройствами и может пропасть при очистке данных. Войдите через Google, чтобы хранить его в облаке.");
 
 const App={go,learn:id=>{view="learn";learn(id)},prac,pick,check,next,quit,demo,closeModal,askOk:()=>{const f=window._ask;window._ask=null;closeModal();f&&f()},dl,cp,imp,impFile,resetAsk,openOnboarding,
